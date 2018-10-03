@@ -26,7 +26,7 @@ BOOL CALLBACK GetWindowHandles(HWND wnd, LPARAM lParam)
 {
 	std::string name = GetWindowNameAsString(wnd);
 
-	if (name.substr (0, 7) == "DeSmuME" || name.substr (0, 6) == "Paused" || name.substr (0, 4) == "____")
+	if (name.substr (0, 7) == "DeSmuME" || name.substr (0, 6) == "Paused")
 	{	
 		newWindows.push_back(wnd);
 	}

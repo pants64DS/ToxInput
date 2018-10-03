@@ -1,6 +1,5 @@
 #include "gui.h"
 
-sf::Font arial;
 sf::Font main_font;
 
 int mouse_x, mouse_y;
