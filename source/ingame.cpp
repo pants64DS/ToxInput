@@ -1,4 +1,5 @@
 #include "ingame.h"
+#include "checkbox.h"
 
 HANDLE EmuHandle = NULL;
 
@@ -45,6 +46,25 @@ void PrepareGameForInput()
 	} code;
 
 	WriteProcessMemory(EmuHandle, (void*)(0x02C6B4 + ndsRAMoffset), &code, sizeof(code), 0);
+	
+	/*unsigned mov_r0_1h = 0xe3a00001;
+	unsigned mov_r1_1h = 0xe3a01001;
+	unsigned mov_r3_1h = 0xe3a03001;
+
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d3bf8 + ndsRAMoffset), &mov_r3_1h, 4, 0);
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d3f3c + ndsRAMoffset), &mov_r0_1h, 4, 0);
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d43b4 + ndsRAMoffset), &mov_r1_1h, 4, 0);
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d4624 + ndsRAMoffset), &mov_r0_1h, 4, 0);
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d4684 + ndsRAMoffset), &mov_r0_1h, 4, 0);
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d4768 + ndsRAMoffset), &mov_r0_1h, 4, 0);
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x0d48c4 + ndsRAMoffset), &mov_r0_1h, 4, 0);*/
+
+	if (y_checkbox.isChecked)
+	{
+		unsigned mov_r0_1h = 0xe3a00001;
+		unsigned* pointer = (unsigned*)(0x02c68c + ndsRAMoffset);
+		WriteProcessMemory(EmuHandle, pointer, &mov_r0_1h, 4, 0);
+	}
 }
 
 bool IsGameCompatible(HANDLE pHandle)

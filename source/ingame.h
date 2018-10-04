@@ -5,8 +5,8 @@
 
 #define ndsRAMoffset 0x1462C3840 // offset to 0x02000000 in nds address space
 
-constexpr unsigned long long input0_addr = ndsRAMoffset + 0x09f49c;
-constexpr unsigned long long input1_addr = ndsRAMoffset + 0x09f4b4;
+constexpr unsigned long long input0 = ndsRAMoffset + 0x09f49c;
+constexpr unsigned long long input1 = ndsRAMoffset + 0x09f4b4;
 
 constexpr unsigned long long KuppaPointer_addr = ndsRAMoffset + 0x09fc48;
 
