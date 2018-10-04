@@ -1,5 +1,6 @@
 #include "checkbox.h"
 #include "emu.h"
+#include "textbutton.h"
 
 CheckBox input_checkbox
 (
@@ -11,13 +12,13 @@ CheckBox input_checkbox
 	true
 );
 
-CheckBox camera_checkbox
+CheckBox y_checkbox
 (
-	"Turn camera\nwith right stick",
+	"Run without\nholding Y",
 	CheckBox::bg1_x + outline,
 	CheckBox::bg1_y + 2 * outline + 60,
 	CheckBox::bg1_width - 2 * outline, 60,
-	62, 4,
+	65, 4,
 	true
 );
 
@@ -58,16 +59,23 @@ void CheckBox::update()
 	if (Emu::selectedEmu == -1)
 	{
 		input_checkbox.flags |= Button::dead;
-		camera_checkbox.flags |= Button::dead;
 	}
 	else
 	{
 		input_checkbox.flags &= ~Button::dead;
-		camera_checkbox.flags &= ~Button::dead;
+	}
+
+	if (input_checkbox.flags & Button::dead || !input_checkbox.isChecked)
+	{
+		y_checkbox.flags |= Button::dead;
+	}
+	else
+	{
+		y_checkbox.flags &= ~Button::dead;
 	}
 
 	input_checkbox.Update();
-	camera_checkbox.Update();
+	y_checkbox.Update();
 }
 
 CheckBox::CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, bool checked)

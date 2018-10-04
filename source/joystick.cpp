@@ -9,9 +9,6 @@ void Controller::SendInput()
 {
 	if (selectedController == -1 || !EmuHandle) return;
 
-	// Input* input0 = (Input*)(input0_addr);
-	Input* input1 = (Input*)(input1_addr);
-
 	Input myInput;
 
 	_XINPUT_STATE state;
@@ -51,17 +48,34 @@ void Controller::SendInput()
 
 	myInput.buttonsHeld = 0;
 
-	if (camera_checkbox.isChecked)
+	if (state.Gamepad.sThumbRX > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
 	{
-		if (state.Gamepad.sThumbRX > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
-		{
-			myInput.buttonsHeld = Input::CAM_LEFT;
-		}
-		else if (state.Gamepad.sThumbRX < -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
-		{
-			myInput.buttonsHeld = Input::CAM_RIGHT;
-		}
+		myInput.buttonsHeld = Input::CAM_LEFT;
+	}
+	else if (state.Gamepad.sThumbRX < -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+	{
+		myInput.buttonsHeld = Input::CAM_RIGHT;
 	}
 
-	WriteProcessMemory(EmuHandle, input1, &myInput, sizeof(Input), 0);
+	Input* input_1 = (Input*)input1;
+
+	WriteProcessMemory(EmuHandle, input_1, &myInput, sizeof(Input), 0);
+
+	if (y_checkbox.isChecked)
+	{
+		void* pointer = (void*)(0x0fa7c4 + ndsRAMoffset);
+
+		unsigned instruction;
+		ReadProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
+		
+		if (instruction == 0xe3520000)  // cmp r2, #0x0
+		{
+			instruction = 0xe1500000; // cmp r0, r0
+			WriteProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
+		}
+
+		bool b = true;
+		pointer = (void*)(0x09f4ac + ndsRAMoffset);
+		WriteProcessMemory(EmuHandle, pointer, &b, 1, 0);
+	}
 }

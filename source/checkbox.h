@@ -36,6 +36,6 @@ struct CheckBox : public Button
 	void Update();
 	void SetTextColor();
 }
-extern input_checkbox, camera_checkbox;
+extern input_checkbox, y_checkbox;
 
 #endif

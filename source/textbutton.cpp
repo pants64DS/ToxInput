@@ -14,10 +14,14 @@ TextButton apply_button("Apply", x, y, width, height, 27, 7, false);
 
 void TextButton::update()
 {
-	if (Emu::selectedEmu == -1)
+	if (Emu::selectedEmu == -1 || !input_checkbox.isChecked)
+	{
 		apply_button.flags |= dead;
+	}
 	else
+	{
 		apply_button.flags &= ~dead;
+	}
 
 	apply_button.Update();
 }
