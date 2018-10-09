@@ -26,6 +26,7 @@ struct Controller : public Button
 	static void checkForConnectedOnes();
 
 	static void SendInput();
+	static void UpdateRumble();
 
 	Controller();
 	virtual ~Controller();

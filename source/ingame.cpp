@@ -1,3 +1,4 @@
+#include "controller.h"
 #include "ingame.h"
 #include "checkbox.h"
 
@@ -115,4 +116,12 @@ bool IsCutsceneRunning()
 	ReadProcessMemory(EmuHandle, KuppaPointerPointer, &KuppaPointer, 4, 0);
 
 	return KuppaPointer != 0;
+}
+
+char IsGamePaused()
+{
+	char pause;
+	ReadProcessMemory(EmuHandle, (unsigned*)(ndsRAMoffset + 0x09f2c4), &pause, 1, 0);
+
+	return pause;
 }

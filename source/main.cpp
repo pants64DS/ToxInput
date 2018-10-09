@@ -4,7 +4,7 @@
 #include "textbutton.h"
 #include "ingame.h"
 
-sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.5", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.6", sf::Style::Titlebar | sf::Style::Close);
 
 void init()
 {
@@ -23,6 +23,15 @@ void init()
 	Controller::init();
 	Emu::init();
 	CheckBox::init();
+}
+
+inline void text(float x, float y, int num)
+{
+	sf::Text text(std::to_string(num), main_font);
+	text.setCharacterSize(15);
+	text.setFillColor(sf::Color::Red);
+	text.setPosition(x, y);
+	window.draw(text);
 }
 
 int main()
@@ -53,8 +62,6 @@ int main()
 		Controller::update();
 		CheckBox::update();
 		TextButton::update();
-
-		window.display();
 		
 		if (input_checkbox.isChecked)
 		{
@@ -64,6 +71,8 @@ int main()
 			}
 			if (!IsCutsceneRunning()) Controller::SendInput();
 		}
+		
+		window.display();
 	}
 	return 0;
 }

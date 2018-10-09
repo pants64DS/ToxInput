@@ -32,9 +32,9 @@ void CheckBox::init()
 	bg_rect1.setPosition(bg1_x, bg1_y);
 	bg_rect1.setFillColor(color::bg1);
 
-	sf::RectangleShape check1 = sf::RectangleShape(sf::Vector2f(11, 3));
-	sf::RectangleShape check2 = sf::RectangleShape(sf::Vector2f(3, 20));
-	sf::Vector2f pos = sf::Vector2f(7, 19);
+	sf::RectangleShape check1(sf::Vector2f(11, 3));
+	sf::RectangleShape check2(sf::Vector2f(3, 20));
+	sf::Vector2f pos(7, 19);
 	check1.setPosition(pos);
 	check2.setPosition(pos);
 	check1.rotate(-125);

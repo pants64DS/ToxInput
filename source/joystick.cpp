@@ -78,4 +78,6 @@ void Controller::SendInput()
 		pointer = (void*)(0x09f4ac + ndsRAMoffset);
 		WriteProcessMemory(EmuHandle, pointer, &b, 1, 0);
 	}
+
+	UpdateRumble();
 }
