@@ -102,7 +102,10 @@ void Emu::refresh()
 		if (i->id == selectedEmu) selectedEmu = newid;
 		i->id = newid;
 
-		if (!IsGameCompatible2(i->wnd)) i->flags |= dead;
+		if (IsGameCompatible2(i->wnd))
+			i->flags &= ~dead;
+		else
+			i->flags |= dead;
 	}
 
 	nextID = Emus.size();
@@ -115,7 +118,7 @@ void Emu::update()
 	static unsigned char timer = 0;
 	if (!(++timer &= 127)) refresh();
 
-	scroll = std::min (std::max (total_height - Emus.size() * (button_height + outline) + outline, scrollSpeed + scroll), float(0));
+	scroll = std::min (std::max (total_height - (int)Emus.size() * (button_height + outline) + outline, scrollSpeed + scroll), 0);
 
 	if (scroll == scrollTarget) scrollSpeed = 0;
 

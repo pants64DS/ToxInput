@@ -4,10 +4,10 @@
 
 namespace
 {
-	constexpr float width = 100;
-	constexpr float height = 40;
-	constexpr float x = CheckBox::bg1_x + CheckBox::bg1_width / 2 - width / 2;
-	constexpr float y = CheckBox::bg1_y + CheckBox::bg1_height - 60;
+	constexpr int width = 100;
+	constexpr int height = 40;
+	constexpr int x = CheckBox::bg1_x + CheckBox::bg1_width / 2 - width / 2;
+	constexpr int y = CheckBox::bg1_y + CheckBox::bg1_height - 60;
 }
 
 TextButton apply_button("Apply", x, y, width, height, 27, 7, false);

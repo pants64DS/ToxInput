@@ -22,6 +22,16 @@ CheckBox y_checkbox
 	true
 );
 
+CheckBox rumble_checkbox
+(
+	"Rumble",
+	CheckBox::bg1_x + outline,
+	screen_height - 60 - border,
+	CheckBox::bg1_width - 2 * outline, 60,
+	62, 16,
+	true
+);
+
 sf::RectangleShape CheckBox::bg_rect1(sf::Vector2f(CheckBox::bg1_width, CheckBox::bg1_height));
 
 sf::Texture CheckBox::texture;
@@ -50,6 +60,9 @@ void CheckBox::init()
 
 	texture = render_texture.getTexture();
 	sprite.setTexture(texture);
+
+	rumble_checkbox.rect.setOutlineThickness(outline);
+	rumble_checkbox.rect.setOutlineColor(color::bg1);
 }
 
 void CheckBox::update()
@@ -59,10 +72,12 @@ void CheckBox::update()
 	if (Emu::selectedEmu == -1)
 	{
 		input_checkbox.flags |= Button::dead;
+		rumble_checkbox.flags |= Button::dead;
 	}
 	else
 	{
 		input_checkbox.flags &= ~Button::dead;
+		rumble_checkbox.flags &= ~Button::dead;
 	}
 
 	if (input_checkbox.flags & Button::dead || !input_checkbox.isChecked)
@@ -76,6 +91,7 @@ void CheckBox::update()
 
 	input_checkbox.Update();
 	y_checkbox.Update();
+	rumble_checkbox.Update();
 }
 
 CheckBox::CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, bool checked)
@@ -130,9 +146,9 @@ void CheckBox::OnMouseOff()
 
 void CheckBox::OnBeingDead()
 {
-	rect.setFillColor(color::bg1);
 	text.setFillColor(color::dead);
 	box.setFillColor(color::bg1);
+	rect.setFillColor(color::bg1);
 	box.setOutlineColor(color::dead);
 	sprite.setColor(color::dead);
 }

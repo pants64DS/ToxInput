@@ -3,23 +3,15 @@
 
 short Emu::nextID = 0;
 
-float Emu::scroll = 0;
-float Emu::scrollSpeed = 0;
-float Emu::scrollTarget = 0;
+int Emu::scroll = 0;
+int Emu::scrollSpeed = 0;
+int Emu::scrollTarget = 0;
 
 sf::RectangleShape Emu::bg_rect(sf::Vector2f(total_width, total_height));
 sf::RectangleShape Emu::scroll_cover_rect1(sf::Vector2f(screen_width - border, starting_y - outline));
 sf::RectangleShape Emu::scroll_cover_rect2(sf::Vector2f(screen_width - (border + total_width + outline), total_height + 2 * outline));
 sf::RectangleShape Emu::scroll_cover_rect3(sf::Vector2f(screen_width - border, screen_height - (starting_y + total_height + outline)));
 sf::RectangleShape Emu::outline_rect(sf::Vector2f(total_width, total_height));
-
-void Emu::updateScroll(sf::Event::MouseWheelEvent event)
-{
-	if (!bg_rect.getGlobalBounds().contains(event.x, event.y)) return;
-
-	scrollSpeed = event.delta * 10;
-	scrollTarget = event.delta * 30 + scroll;
-}
 
 Emu::Emu(HWND _wnd, std::string _name)
 {

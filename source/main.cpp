@@ -1,10 +1,7 @@
-#include "controller.h"
 #include "emu.h"
+#include "controller.h"
 #include "checkbox.h"
 #include "textbutton.h"
-#include "ingame.h"
-
-sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.6", sf::Style::Titlebar | sf::Style::Close);
 
 void init()
 {
@@ -25,36 +22,13 @@ void init()
 	CheckBox::init();
 }
 
-inline void text(float x, float y, int num)
-{
-	sf::Text text(std::to_string(num), main_font);
-	text.setCharacterSize(15);
-	text.setFillColor(sf::Color::Red);
-	text.setPosition(x, y);
-	window.draw(text);
-}
-
 int main()
 {
 	init();
 
 	while (window.isOpen())
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				window.close();
-				return 0;
-			}
-
-			if(event.type == sf::Event::MouseWheelMoved)
-			{
-				Emu::updateScroll(event.mouseWheel);
-			}
-		}
-		UpdateMouse();
+		UpdateEvents();
 
 		window.clear(color::bg3);
 
@@ -63,16 +37,8 @@ int main()
 		CheckBox::update();
 		TextButton::update();
 		
-		if (input_checkbox.isChecked)
-		{
-			if (apply_button.flags & Button::click_1_frame && IsGameCompatible(EmuHandle))
-			{
-				PrepareGameForInput();
-			}
-			if (!IsCutsceneRunning()) Controller::SendInput();
-		}
-		
 		window.display();
 	}
+
 	return 0;
 }

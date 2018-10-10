@@ -1,4 +1,7 @@
 #include "controller.h"
+#include "ingame.h"
+#include "checkbox.h"
+#include "textbutton.h"
 
 Controller controller_select[4] =
 {
@@ -32,6 +35,17 @@ void Controller::update()
 	{
 		controller_select[i].Update();
 	}
+
+	if (input_checkbox.isChecked)
+	{
+		if (apply_button.flags & Button::click_1_frame && IsGameCompatible(EmuHandle))
+		{
+			PrepareGameForInput();
+		}
+		if (!IsCutsceneRunning()) SendInput();
+	}
+
+	if (rumble_checkbox.isChecked) UpdateRumble();
 }
 
 void Controller::checkForConnectedOnes()

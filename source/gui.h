@@ -7,16 +7,17 @@ extern sf::RenderWindow window;
 extern sf::Font main_font;
 
 extern int mouse_x, mouse_y;
+extern bool mouseOnWindow;
 
-void UpdateMouse();
 bool MouseOnRect(sf::RectangleShape rect);
+void UpdateEvents();
 
-constexpr float outline = 5;
-constexpr float raw_border = 8;
-constexpr float border = raw_border + outline;
+constexpr int outline = 5;
+constexpr int raw_border = 8;
+constexpr int border = raw_border + outline;
 
-constexpr float screen_width = 620;
-constexpr float screen_height = 310;
+constexpr int screen_width = 620;
+constexpr int screen_height = 310;
 
 struct Button
 {

@@ -22,3 +22,5 @@ if %errorlevel% == 0 (
 )
 
 exit
+
+rem this will do until i write a proper makefile
