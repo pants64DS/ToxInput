@@ -57,9 +57,7 @@ void Controller::SendInput()
 		myInput.buttonsHeld = Input::CAM_RIGHT;
 	}
 
-	Input* input_1 = (Input*)input1;
-
-	WriteProcessMemory(EmuHandle, input_1, &myInput, sizeof(Input), 0);
+	WriteProcessMemory(EmuHandle, (Input*)input1, &myInput, sizeof(Input), 0);
 
 	if (y_checkbox.isChecked)
 	{
@@ -75,9 +73,6 @@ void Controller::SendInput()
 		}
 
 		bool b = true;
-		pointer = (void*)(0x09f4ac + ndsRAMoffset);
-		WriteProcessMemory(EmuHandle, pointer, &b, 1, 0);
+		WriteProcessMemory(EmuHandle, (void*)(0x09f4ac + ndsRAMoffset), &b, 1, 0);
 	}
-
-	UpdateRumble();
 }

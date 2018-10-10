@@ -1,15 +1,12 @@
 #include "gui.h"
+#include "emu.h"
 
 sf::Font main_font;
 
 int mouse_x, mouse_y;
+bool mouseOnWindow;
 
-void UpdateMouse()
-{
-	sf::Vector2i vec = sf::Mouse::getPosition(window);
-	mouse_x = vec.x;
-	mouse_y = vec.y;
-}
+sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.6", sf::Style::Titlebar | sf::Style::Close);
 
 bool MouseOnRect(sf::RectangleShape rect)
 {
@@ -45,14 +42,11 @@ void Button::Update()
 	if (flags & dead)
 	{
 		OnBeingDead();
-		return;
 	}
-
-	if (MouseOnRect(rect))
+	else if (MouseOnRect(rect) && mouseOnWindow)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-
 			state = (state == ST_MOUSE_OFF || state == ST_INVALID) ? ST_INVALID : ST_CLICKED;
 		}
 		else
@@ -70,4 +64,40 @@ void Button::Update()
 	}
 
 	window.draw(rect);
+}
+
+void UpdateEvents()
+{
+	sf::Event event;
+	while (window.pollEvent(event))
+	{
+		switch (event.type)
+		{
+			case sf::Event::Closed:
+				window.close();
+				break;
+			
+			case sf::Event::MouseWheelMoved:
+				if (Emu::bg_rect.getGlobalBounds().contains(event.mouseWheel.x, event.mouseWheel.y))
+				{
+					Emu::scrollSpeed = event.mouseWheel.delta * 10;
+					Emu::scrollTarget = event.mouseWheel.delta * 30 + Emu::scroll;
+				}
+				break;
+			
+			case sf::Event::MouseEntered:
+				mouseOnWindow = true;
+				break;
+
+			case sf::Event::MouseLeft:
+				mouseOnWindow = false;
+				break;
+
+			case sf::Event::MouseMoved:
+				sf::Vector2i vec = sf::Mouse::getPosition(window);
+				mouse_x = vec.x;
+				mouse_y = vec.y;
+				break;
+		}
+	}
 }

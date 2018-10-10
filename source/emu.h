@@ -9,15 +9,15 @@
 
 struct Emu : public Button
 {
-	static constexpr float button_width = Controller::width * 4 + outline * 3;
-	static constexpr float button_height = 40;
-	static constexpr float starting_y = Controller::total_height + raw_border + border + Controller::starting_y;
-	static constexpr float total_width = Controller::total_width - 2 * outline;
-	static constexpr float total_height = screen_height - starting_y - border;
+	static constexpr int button_width = Controller::width * 4 + outline * 3;
+	static constexpr int button_height = 40;
+	static constexpr int starting_y = Controller::total_height + raw_border + border + Controller::starting_y;
+	static constexpr int total_width = Controller::total_width - 2 * outline;
+	static constexpr int total_height = screen_height - starting_y - border;
 
-	static float scroll;
-	static float scrollSpeed;
-	static float scrollTarget;
+	static int scroll;
+	static int scrollSpeed;
+	static int scrollTarget;
 
 	static short selectedEmu;
 
@@ -30,7 +30,6 @@ struct Emu : public Button
 	static void init();
 	static void update();
 	static void refresh();
-	static void updateScroll(sf::Event::MouseWheelEvent event);
 
 	Emu(HWND _wnd, std::string _name);
 	virtual ~Emu();

@@ -9,7 +9,7 @@ struct CheckBox : public Button
 	static constexpr float bg1_x = 2 * raw_border + Controller::total_width;
 	static constexpr float bg1_y = raw_border + Controller::starting_y;
 	static constexpr float bg1_width = screen_width - bg1_x - raw_border;
-	static constexpr float bg1_height = screen_height - bg1_y - raw_border;
+	static constexpr float bg1_height = screen_height - bg1_y - 2 * border - 60;
 
 	static constexpr float box_size = 25;
 
@@ -36,6 +36,6 @@ struct CheckBox : public Button
 	void Update();
 	void SetTextColor();
 }
-extern input_checkbox, y_checkbox;
+extern input_checkbox, y_checkbox, rumble_checkbox;
 
 #endif

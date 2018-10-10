@@ -111,14 +111,12 @@ bool IsCutsceneRunning()
 	if (EmuHandle == NULL) return false;
 
 	unsigned KuppaPointer;
-	unsigned* KuppaPointerPointer = (unsigned*)(KuppaPointer_addr);
-
-	ReadProcessMemory(EmuHandle, KuppaPointerPointer, &KuppaPointer, 4, 0);
+	ReadProcessMemory(EmuHandle, (unsigned*)(KuppaPointer_addr), &KuppaPointer, 4, 0);
 
 	return KuppaPointer != 0;
 }
 
-char IsGamePaused()
+char IsGamePaused() // 0 - not paused, 1 - paused, 2 - exiting pause
 {
 	char pause;
 	ReadProcessMemory(EmuHandle, (unsigned*)(ndsRAMoffset + 0x09f2c4), &pause, 1, 0);

@@ -7,12 +7,12 @@
 
 struct Controller : public Button
 {
-	static constexpr float width = 90;
-	static constexpr float height = 62;
+	static constexpr int width = 90;
+	static constexpr int height = 62;
 
-	static constexpr float total_width = Controller::width * 4 + outline * 5;
-	static constexpr float total_height = Controller::height + outline * 2;
-	static constexpr float starting_y = 2;
+	static constexpr int total_width = Controller::width * 4 + outline * 5;
+	static constexpr int total_height = Controller::height + outline * 2;
+	static constexpr int starting_y = 2;
 
 	static sf::Texture texture;
 	static sf::Sprite sprite;

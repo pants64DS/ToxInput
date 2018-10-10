@@ -1,15 +1,6 @@
 #include "controller.h"
 #include "ingame.h"
 
-/*inline void text(float x, float y, int num)
-{
-	sf::Text text(std::to_string(num), main_font);
-	text.setCharacterSize(15);
-	text.setFillColor(sf::Color::Red);
-	text.setPosition(x, y);
-	window.draw(text);
-}*/
-
 unsigned char GetStateState(unsigned player)
 {
 	unsigned char stateState;
@@ -20,7 +11,9 @@ unsigned char GetStateState(unsigned player)
 
 void Controller::UpdateRumble()
 {
-	if (IsGamePaused())
+	if (selectedController == -1) return;
+
+	if (IsGamePaused() || !EmuHandle)
 	{
 		XINPUT_VIBRATION no_rumble {0, 0};
 		XInputSetState(selectedController, &no_rumble);
