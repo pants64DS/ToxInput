@@ -1,7 +1,7 @@
 #include "emu.h"
 #include "controller.h"
 #include "checkbox.h"
-#include "textbutton.h"
+#include "ingame.h"
 
 void init()
 {
@@ -20,7 +20,19 @@ void init()
 	Controller::init();
 	Emu::init();
 	CheckBox::init();
+
+	for (int i = 0; i < 4; i++)
+		Controller::checkIfConnected(i);
 }
+
+/*inline void text(float x, float y, long long int num)
+{
+	sf::Text text(std::to_string(num), main_font);
+	text.setCharacterSize(15);
+	text.setFillColor(sf::Color::Red);
+	text.setPosition(x, y);
+	window.draw(text);
+}*/
 
 int main()
 {
@@ -35,8 +47,23 @@ int main()
 		Emu::update();
 		Controller::update();
 		CheckBox::update();
-		TextButton::update();
 		
+		if (IsGameCompatible(EmuHandle))
+		{
+			UpdateJoystickInput();
+			UpdateRunWithoutY();
+			Controller::UpdateRumble();
+		}
+		else if (EmuHandle != NULL)
+		{
+			CloseHandle(EmuHandle);
+			EmuHandle = NULL;
+			Emus[Emu::selectedEmu].flags |= Button::dead;
+		}
+
+		// text (100, 200, Emu::selectedEmu);
+		// text (100, 220, (long long int)(EmuHandle));
+
 		window.display();
 	}
 

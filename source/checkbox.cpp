@@ -1,6 +1,6 @@
 #include "checkbox.h"
 #include "emu.h"
-#include "textbutton.h"
+#include "ingame.h"
 
 CheckBox input_checkbox
 (
@@ -67,9 +67,7 @@ void CheckBox::init()
 
 void CheckBox::update()
 {
-	window.draw(bg_rect1);
-
-	if (Emu::selectedEmu == -1)
+	if (EmuHandle == NULL)
 	{
 		input_checkbox.flags |= Button::dead;
 		rumble_checkbox.flags |= Button::dead;
@@ -80,18 +78,29 @@ void CheckBox::update()
 		rumble_checkbox.flags &= ~Button::dead;
 	}
 
+	static bool b = false;
 	if (input_checkbox.flags & Button::dead || !input_checkbox.isChecked)
 	{
 		y_checkbox.flags |= Button::dead;
+		if (y_checkbox.isChecked) b = true;
+		y_checkbox.isChecked = false;
 	}
 	else
 	{
 		y_checkbox.flags &= ~Button::dead;
+
+		if (b)
+		{
+			y_checkbox.isChecked = true;
+			b = false;
+		}
 	}
 
+	window.draw(bg_rect1);
+
 	input_checkbox.Update();
-	y_checkbox.Update();
 	rumble_checkbox.Update();
+	y_checkbox.Update();
 }
 
 CheckBox::CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, bool checked)

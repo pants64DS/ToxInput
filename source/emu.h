@@ -51,4 +51,6 @@ struct Emu : public Button
 extern std::vector<Emu> Emus;
 extern std::vector<HWND> newWindows;
 
+extern unsigned char timer;
+
 #endif

@@ -23,7 +23,7 @@ struct Controller : public Button
 
 	static void init();
 	static void update();
-	static void checkForConnectedOnes();
+	static void checkIfConnected(unsigned char i);
 
 	static void SendInput();
 	static void UpdateRumble();

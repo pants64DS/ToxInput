@@ -5,6 +5,7 @@ std::vector<Emu> Emus;
 std::vector<HWND> newWindows;
 
 short Emu::selectedEmu = -1;
+unsigned char timer = 0;
 
 std::string GetWindowNameAsString(HWND wnd)
 {
@@ -84,6 +85,7 @@ void Emu::refresh()
 		}
 		if (windowExits)
 		{
+			i->name.setString(GetWindowNameAsString(i->wnd));
 			Emus2.push_back(*i);
 		}
 		else if (i->id == selectedEmu)
@@ -115,8 +117,9 @@ void Emu::refresh()
 
 void Emu::update()
 {
-	static unsigned char timer = 0;
-	if (!(++timer &= 127)) refresh();
+	timer++;
+	timer &= 31;
+	if (timer == 24) refresh();
 
 	scroll = std::min (std::max (total_height - (int)Emus.size() * (button_height + outline) + outline, scrollSpeed + scroll), 0);
 
