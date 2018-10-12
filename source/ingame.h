@@ -40,7 +40,13 @@ struct Input
 };
 
 HANDLE GetProcessHandle(HWND wnd);
-void PrepareGameForInput();
+
+void UpdateRunWithoutY();
+
+void EnableJoystickInput();
+void DisableJoystickInput();
+void UpdateJoystickInput();
+
 bool IsGameCompatible(HANDLE pHandle);
 bool IsGameCompatible2(HWND wnd);
 bool IsCutsceneRunning();

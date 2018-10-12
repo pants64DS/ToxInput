@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "ingame.h"
 #include "checkbox.h"
-#include "textbutton.h"
+#include "emu.h"
 
 Controller controller_select[4] =
 {
@@ -29,35 +29,18 @@ void Controller::update()
 {
 	window.draw(bg_rect);
 
-	checkForConnectedOnes();
+	if (timer < 13 && timer % 4 == 0)
+		checkIfConnected(timer >> 2);
 	
 	for (int i = 0; i < 4; i++)
-	{
 		controller_select[i].Update();
-	}
-
-	if (input_checkbox.isChecked)
-	{
-		if (apply_button.flags & Button::click_1_frame && IsGameCompatible(EmuHandle))
-		{
-			PrepareGameForInput();
-		}
-		if (!IsCutsceneRunning()) SendInput();
-	}
-
-	if (rumble_checkbox.isChecked) UpdateRumble();
 }
 
-void Controller::checkForConnectedOnes()
+void Controller::checkIfConnected(unsigned char i)
 {
-	for (int i = 0; i < 4; i++)
-	{
-		_XINPUT_STATE state;
-
-		ZeroMemory(&state, sizeof(_XINPUT_STATE));
-		if (XInputGetState(i, &state) != ERROR_SUCCESS)
-		{
-			controller_select[i].flags |= Button::dead;
-		}
-	}
+	_XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(_XINPUT_STATE));
+	
+	if (XInputGetState(i, &state) != ERROR_SUCCESS)
+		controller_select[i].flags |= Button::dead;
 }

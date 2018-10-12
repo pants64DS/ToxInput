@@ -37,7 +37,26 @@ void Emu::Update()
 	window.draw(name);
 
 	if (flags & click_1_frame)
-		selectedEmu = (selectedEmu == id) ? (EmuHandle = NULL, -1) : (EmuHandle = GetProcessHandle(wnd), id);
+	{
+		if (EmuHandle)
+		{
+			CloseHandle(EmuHandle);
+			EmuHandle = NULL;
+		}
+		
+		selectedEmu = (selectedEmu == id) ? -1 : (EmuHandle = GetProcessHandle(wnd), id);
+	}
+
+	if (id == selectedEmu && !EmuHandle)
+	{
+		EmuHandle = GetProcessHandle(wnd);
+		if (!IsGameCompatible(EmuHandle))
+		{
+			CloseHandle(EmuHandle);
+			EmuHandle = NULL;
+		}
+	}
+
 }
 
 void Emu::OnMouseOn()

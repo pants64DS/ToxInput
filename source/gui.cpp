@@ -6,7 +6,7 @@ sf::Font main_font;
 int mouse_x, mouse_y;
 bool mouseOnWindow;
 
-sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.6", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.7", sf::Style::Titlebar | sf::Style::Close);
 
 bool MouseOnRect(sf::RectangleShape rect)
 {

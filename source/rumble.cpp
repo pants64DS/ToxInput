@@ -1,5 +1,6 @@
 #include "controller.h"
 #include "ingame.h"
+#include "checkbox.h"
 
 unsigned char GetStateState(unsigned player)
 {
@@ -11,9 +12,9 @@ unsigned char GetStateState(unsigned player)
 
 void Controller::UpdateRumble()
 {
-	if (selectedController == -1) return;
+	if (Controller::selectedController == -1) return;
 
-	if (IsGamePaused() || !EmuHandle)
+	if (IsGamePaused() || !EmuHandle || !rumble_checkbox.isChecked)
 	{
 		XINPUT_VIBRATION no_rumble {0, 0};
 		XInputSetState(selectedController, &no_rumble);
@@ -145,6 +146,7 @@ void Controller::UpdateRumble()
 				case ST_DEAD_HIT:
 				case ST_SQUISH:
 				case ST_THROWN:
+				case ST_LAUNCH_STAR:
 					rumble = {65535, 3000};
 					break;
 
