@@ -49,10 +49,22 @@ void UpdateJoystickInput();
 
 bool IsGameCompatible(HANDLE pHandle);
 bool IsGameCompatible2(HWND wnd);
+
 bool IsCutsceneRunning();
 char IsGamePaused();
+unsigned GetFrameCounter();
+
+bool IsJITModeCertainlyOn();
+
+unsigned GetPlayer0();
 
 extern HANDLE EmuHandle;
+
+extern unsigned player0;
+extern unsigned oldPlayer0;
+
+extern unsigned prevFrameCounter;
+extern bool jit_on;
 
 enum States // Credits for these go to Josh65536
 {

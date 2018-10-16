@@ -9,7 +9,7 @@ CheckBox input_checkbox
 	CheckBox::bg1_y + outline,
 	CheckBox::bg1_width - 2 * outline, 60,
 	62, 16,
-	true
+	Button::dead | Button::checked
 );
 
 CheckBox y_checkbox
@@ -19,7 +19,7 @@ CheckBox y_checkbox
 	CheckBox::bg1_y + 2 * outline + 60,
 	CheckBox::bg1_width - 2 * outline, 60,
 	65, 4,
-	true
+	Button::dead | Button::checked | Button::checked2
 );
 
 CheckBox rumble_checkbox
@@ -29,7 +29,7 @@ CheckBox rumble_checkbox
 	screen_height - 60 - border,
 	CheckBox::bg1_width - 2 * outline, 60,
 	62, 16,
-	true
+	Button::dead | Button::checked
 );
 
 sf::RectangleShape CheckBox::bg_rect1(sf::Vector2f(CheckBox::bg1_width, CheckBox::bg1_height));
@@ -65,45 +65,39 @@ void CheckBox::init()
 	rumble_checkbox.rect.setOutlineColor(color::bg1);
 }
 
+void assign_bit (unsigned char* number, unsigned source_bit, unsigned target_bit)
+{
+	if (*number & source_bit)
+		*number |= target_bit;
+	else
+		*number &= ~target_bit;
+}
+
 void CheckBox::update()
 {
-	if (EmuHandle == NULL)
-	{
-		input_checkbox.flags |= Button::dead;
-		rumble_checkbox.flags |= Button::dead;
-	}
-	else
-	{
-		input_checkbox.flags &= ~Button::dead;
-		rumble_checkbox.flags &= ~Button::dead;
-	}
-
-	static bool b = false;
-	if (input_checkbox.flags & Button::dead || !input_checkbox.isChecked)
-	{
-		y_checkbox.flags |= Button::dead;
-		if (y_checkbox.isChecked) b = true;
-		y_checkbox.isChecked = false;
-	}
-	else
-	{
-		y_checkbox.flags &= ~Button::dead;
-
-		if (b)
-		{
-			y_checkbox.isChecked = true;
-			b = false;
-		}
-	}
-
 	window.draw(bg_rect1);
 
 	input_checkbox.Update();
 	rumble_checkbox.Update();
 	y_checkbox.Update();
+
+	if (input_checkbox.flags & Button::checked)
+	{
+		assign_bit(&y_checkbox.flags, Button::checked, Button::checked2);
+	}
+	else
+	{
+		assign_bit(&y_checkbox.flags, Button::checked2, Button::checked);
+
+		y_checkbox.flags |= Button::dead;
+		y_checkbox.flags &= ~Button::checked;
+	}
+
+	if (input_checkbox.flags & Button::click_1_frame)
+		assign_bit(&y_checkbox.flags, Button::checked2, Button::checked);
 }
 
-CheckBox::CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, bool checked)
+CheckBox::CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, unsigned char _flags)
 {
 	rect = sf::RectangleShape(sf::Vector2f(width, height));
 	rect.setPosition(x, y);
@@ -118,20 +112,20 @@ CheckBox::CheckBox(std::string _text, float x, float y, float width, float heigh
 	text.setCharacterSize(18);
 	text.setPosition(x + text_x, y + text_y);
 
-	isChecked = checked;
+	flags = _flags;
 }
 
 CheckBox::~CheckBox(){}
 
 void CheckBox::Update()
 {
-	if (flags & click_1_frame) isChecked = !isChecked;
+	if (flags & click_1_frame) flags ^= checked;
 
 	Button::Update();
 	window.draw(box);
 	window.draw(text);
 
-	if (isChecked)
+	if (flags & checked)
 	{
 		sprite.setPosition(box.getPosition());
 		window.draw(sprite);
@@ -140,7 +134,7 @@ void CheckBox::Update()
 
 void CheckBox::OnMouseOn()
 {
-	sf::Color color = isChecked ? color::dark_selected : color::dead;
+	sf::Color color = (flags & checked) ? color::dark_selected : color::dead;
 	box.setFillColor(color);
 	rect.setFillColor(color);
 	SetTextColor();
@@ -164,7 +158,7 @@ void CheckBox::OnBeingDead()
 
 void CheckBox::SetTextColor()
 {
-	sf::Color color = isChecked ? color::bright_selected : color::whiteish1;
+	sf::Color color = (flags & checked) ? color::bright_selected : color::whiteish1;
 	text.setFillColor(color);
 	box.setOutlineColor(color);
 	sprite.setColor(color::bright_selected);

@@ -8,6 +8,9 @@
 
 HANDLE EmuHandle = NULL;
 
+unsigned player0 = 0;
+unsigned oldPlayer0 = 0;
+
 HANDLE GetProcessHandle(HWND wnd)
 {
 	long unsigned pid;
@@ -17,6 +20,8 @@ HANDLE GetProcessHandle(HWND wnd)
 
 void UpdateRunWithoutY()
 {
+	if (!player0) return;
+
 	void* pointer = (void*)(0x0fa7c4 + ndsRAMoffset);
 	unsigned instruction;
 	ReadProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
@@ -24,7 +29,7 @@ void UpdateRunWithoutY()
 	if (instruction == 0xe3520000 || instruction == 0xe1500000)
 	{
 		bool b;
-		if (y_checkbox.isChecked)
+		if (y_checkbox.flags & CheckBox::checked)
 		{
 			instruction = 0xe1500000; // cmp r0, r0
 			WriteProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
@@ -141,15 +146,15 @@ void DisableJoystickInput()
 
 void UpdateJoystickInput()
 {
-	if ((Emus[Emu::selectedEmu].flags | input_checkbox.flags) & Button::click_1_frame || timer == 16)
+	if (((Emus[Emu::selectedEmu].flags | input_checkbox.flags) & Button::click_1_frame) || timer == 16)
 	{
-		if (input_checkbox.isChecked)
+		if (input_checkbox.flags & CheckBox::checked)
 			EnableJoystickInput();
 		else
 			DisableJoystickInput();
 	}
 
-	if (Controller::selectedController == -1 || !input_checkbox.isChecked || IsCutsceneRunning()) return;
+	if (Controller::selectedController == -1 || !(input_checkbox.flags & CheckBox::checked) || IsCutsceneRunning() || !player0) return;
 
 	Input myInput;
 	ZeroMemory(&myInput, sizeof(Input));
@@ -254,4 +259,56 @@ char IsGamePaused() // 0 - not paused, 1 - paused, 2 - exiting pause
 	ReadProcessMemory(EmuHandle, (unsigned*)(ndsRAMoffset + 0x09f2c4), &pause, 1, 0);
 
 	return pause;
+}
+
+unsigned GetFrameCounter()
+{
+	unsigned frame_counter;
+	ReadProcessMemory(EmuHandle, (void*)(ndsRAMoffset + 0x0a1040), &frame_counter, 4, 0);
+
+	return frame_counter;
+}
+
+inline void InitJitModeCheck()
+{
+	struct // Inject this just before overlay 0
+	{
+		unsigned str_r0_r15_mCh = 0xe50f000c;
+		unsigned ldrb_r0_r0 = 0xe5d00000;
+		unsigned bx_lr = 0xe12fff1e;
+	} code;
+
+	WriteProcessMemory(EmuHandle, (void*)(0x0aa414 + ndsRAMoffset), &code, sizeof(code), 0);
+
+	unsigned bl_0x020aa414 = 0xeb01f855;
+	WriteProcessMemory(EmuHandle, (void*)(0x02c2b8 + ndsRAMoffset), &bl_0x020aa414, 4, 0);
+}
+
+unsigned prevFrameCounter = 0xffffffff;
+bool jit_on = false;
+
+bool IsJITModeCertainlyOn()
+{
+	unsigned frame_counter;
+	frame_counter = GetFrameCounter();
+
+	if (player0 == 0)
+		return false;
+	
+	else if (oldPlayer0 == 0)
+		prevFrameCounter = GetFrameCounter();
+
+	unsigned a;
+	ReadProcessMemory(EmuHandle, (void*)(0x0aa410 + ndsRAMoffset), &a, 4, 0);
+
+	if (frame_counter > prevFrameCounter + 1) InitJitModeCheck();
+
+	return a != 0x0209f2d8 && frame_counter > prevFrameCounter + 2;
+}
+
+unsigned GetPlayer0()
+{
+	unsigned player0;
+	ReadProcessMemory(EmuHandle, (void*)(PLAYER_ARR), &player0, 4, 0);
+	return player0;
 }

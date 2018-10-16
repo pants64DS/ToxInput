@@ -2,10 +2,10 @@
 #include "ingame.h"
 #include "checkbox.h"
 
-unsigned char GetStateState(unsigned player)
+unsigned char GetStateState(unsigned player0)
 {
 	unsigned char stateState;
-	ReadProcessMemory(EmuHandle, (void*)(player + (ndsRAMoffset - 0x02000000 + 0x6e3)), &stateState, 1, 0);
+	ReadProcessMemory(EmuHandle, (void*)(player0 + (ndsRAMoffset - 0x02000000 + 0x6e3)), &stateState, 1, 0);
 
 	return stateState;
 }
@@ -14,16 +14,13 @@ void Controller::UpdateRumble()
 {
 	if (Controller::selectedController == -1) return;
 
-	if (IsGamePaused() || !EmuHandle || !rumble_checkbox.isChecked)
+	if (IsGamePaused() || !EmuHandle || !(rumble_checkbox.flags & CheckBox::checked) || !player0)
 	{
 		XINPUT_VIBRATION no_rumble {0, 0};
 		XInputSetState(selectedController, &no_rumble);
 
 		return;
 	}
-
-	unsigned player0;
-	ReadProcessMemory(EmuHandle, (void*)(PLAYER_ARR), &player0, 4, 0);
 
 	unsigned currState;
 	ReadProcessMemory(EmuHandle, (void*)(player0 + (ndsRAMoffset - 0x02000000 + 0x370)), &currState, 4, 0);
@@ -100,7 +97,7 @@ void Controller::UpdateRumble()
 			static unsigned prev_frame_counter = 0xffffffff;
 
 			unsigned frame_counter;
-			ReadProcessMemory(EmuHandle, (void*)(ndsRAMoffset + 0x0a1040), &frame_counter, 4, 0);
+			frame_counter = GetFrameCounter();
 
 			if (currState != lastState)
 			{
