@@ -25,14 +25,14 @@ void init()
 		Controller::checkIfConnected(i);
 }
 
-/*inline void text(float x, float y, long long int num)
+inline void text(float x, float y, long long int num)
 {
 	sf::Text text(std::to_string(num), main_font);
 	text.setCharacterSize(15);
 	text.setFillColor(sf::Color::Red);
 	text.setPosition(x, y);
 	window.draw(text);
-}*/
+}
 
 int main()
 {
@@ -47,25 +47,64 @@ int main()
 		Emu::update();
 		Controller::update();
 		CheckBox::update();
-		
+
 		if (IsGameCompatible(EmuHandle))
 		{
+			player0 = GetPlayer0();
+
 			UpdateJoystickInput();
 			UpdateRunWithoutY();
 			Controller::UpdateRumble();
+
+			if (!jit_on) jit_on = IsJITModeCertainlyOn();
+
+			if (jit_on)
+			{
+				input_checkbox.flags |= Button::dead;
+				y_checkbox.flags |= Button::dead;
+			}
+			else
+			{
+				input_checkbox.flags &= ~Button::dead;
+				y_checkbox.flags &= ~Button::dead;
+			}
+
+			rumble_checkbox.flags &= ~Button::dead;
 		}
-		else if (EmuHandle != NULL)
+		else
 		{
-			CloseHandle(EmuHandle);
-			EmuHandle = NULL;
-			Emus[Emu::selectedEmu].flags |= Button::dead;
+			rumble_checkbox.flags |= Button::dead;
+			input_checkbox.flags |= Button::dead;
+			y_checkbox.flags |= Button::dead;
+
+			player0 = 0;
+			prevFrameCounter = 0xffffffff;
+			jit_on = false;
+
+			if (EmuHandle != NULL)
+			{
+				CloseHandle(EmuHandle);
+				EmuHandle = NULL;
+				Emus[Emu::selectedEmu].flags |= Button::dead;
+			}
 		}
 
-		// text (100, 200, Emu::selectedEmu);
-		// text (100, 220, (long long int)(EmuHandle));
+		if (GetFrameCounter() < 60)
+		{
+			jit_on = false;
+			prevFrameCounter = 0xffffffff;
+		}
+
+		// text (100, 200, GetFrameCounter());
+		// text (100, 220, prevFrameCounter);
+		// text (100, 240, jit_on);
+
+		oldPlayer0 = player0;
 
 		window.display();
 	}
+
+	if (EmuHandle) CloseHandle(EmuHandle);
 
 	return 0;
 }

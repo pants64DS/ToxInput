@@ -35,7 +35,9 @@ struct Button
 	enum Flags : unsigned char
 	{
 		dead = 1 << 0,
-		click_1_frame = 1 << 1
+		click_1_frame = 1 << 1,
+		checked = 1 << 2,
+		checked2 = 1 << 3
 	};
 	unsigned char flags;
 

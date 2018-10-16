@@ -23,9 +23,7 @@ struct CheckBox : public Button
 	sf::Text text;
 	sf::RectangleShape box;
 
-	bool isChecked;
-
-	CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, bool checked);
+	CheckBox(std::string _text, float x, float y, float width, float height, float text_x, float text_y, unsigned char _flags);
 
 	virtual ~CheckBox();
 
