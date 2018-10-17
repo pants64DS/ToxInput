@@ -22,11 +22,21 @@ CheckBox y_checkbox
 	Button::dead | Button::checked | Button::checked2
 );
 
+CheckBox camera_checkbox
+(
+	"Inverted\ncamera controls",
+	CheckBox::bg1_x + outline,
+	CheckBox::bg1_y + CheckBox::bg1_height + border,
+	CheckBox::bg1_width - 2 * outline, 60,
+	56, 10,
+	Button::dead | Button::checked
+);
+
 CheckBox rumble_checkbox
 (
 	"Rumble",
 	CheckBox::bg1_x + outline,
-	screen_height - 60 - border,
+	CheckBox::bg1_y + CheckBox::bg1_height + 2 * border + 60 + outline,
 	CheckBox::bg1_width - 2 * outline, 60,
 	62, 16,
 	Button::dead | Button::checked
@@ -63,6 +73,8 @@ void CheckBox::init()
 
 	rumble_checkbox.rect.setOutlineThickness(outline);
 	rumble_checkbox.rect.setOutlineColor(color::bg1);
+	camera_checkbox.rect.setOutlineThickness(outline);
+	camera_checkbox.rect.setOutlineColor(color::bg1);
 }
 
 void assign_bit (unsigned char* number, unsigned source_bit, unsigned target_bit)
@@ -80,6 +92,7 @@ void CheckBox::update()
 	input_checkbox.Update();
 	rumble_checkbox.Update();
 	y_checkbox.Update();
+	camera_checkbox.Update();
 
 	if (input_checkbox.flags & Button::checked)
 	{
@@ -89,8 +102,8 @@ void CheckBox::update()
 	{
 		assign_bit(&y_checkbox.flags, Button::checked2, Button::checked);
 
-		y_checkbox.flags |= Button::dead;
 		y_checkbox.flags &= ~Button::checked;
+		y_checkbox.flags |= Button::dead;
 	}
 
 	if (input_checkbox.flags & Button::click_1_frame)

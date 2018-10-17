@@ -18,35 +18,42 @@ HANDLE GetProcessHandle(HWND wnd)
 	return OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
 }
 
+inline void EnableRunWithoutY()
+{
+	unsigned instruction = 0xe1500000; // cmp r0, r0
+	WriteProcessMemory(EmuHandle, (void*)(0x0fa7c4 + ndsRAMoffset), &instruction, 4, 0);
+
+	instruction = 0xe3a00001; // mov r0, #1
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x02c68c + ndsRAMoffset), &instruction, 4, 0);
+}
+
+void DisableRunWithoutY()
+{
+	unsigned instruction = 0xe3520000; // cmp r2, #0x0
+	WriteProcessMemory(EmuHandle, (void*)(0x0fa7c4 + ndsRAMoffset), &instruction, 4, 0);
+
+	instruction = 0xe5c90014; // strb r0, [r9, #0x14]
+	WriteProcessMemory(EmuHandle, (unsigned*)(0x02c68c + ndsRAMoffset), &instruction, 4, 0);
+}
+
 void UpdateRunWithoutY()
 {
 	if (!player0) return;
 
-	void* pointer = (void*)(0x0fa7c4 + ndsRAMoffset);
 	unsigned instruction;
-	ReadProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
+	ReadProcessMemory(EmuHandle, (void*)(0x0fa7c4 + ndsRAMoffset), &instruction, 4, 0);
 
 	if (instruction == 0xe3520000 || instruction == 0xe1500000)
 	{
 		bool b;
 		if (y_checkbox.flags & CheckBox::checked)
 		{
-			instruction = 0xe1500000; // cmp r0, r0
-			WriteProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
-
-			instruction = 0xe3a00001; // mov r0, #1
-			WriteProcessMemory(EmuHandle, (unsigned*)(0x02c68c + ndsRAMoffset), &instruction, 4, 0);
-
+			EnableRunWithoutY();
 			b = true;
 		}
 		else
 		{
-			instruction = 0xe3520000; // cmp r2, #0x0
-			WriteProcessMemory(EmuHandle, pointer, &instruction, 4, 0);
-
-			instruction = 0xe5c90014; // strb r0, [r9, #0x14]
-			WriteProcessMemory(EmuHandle, (unsigned*)(0x02c68c + ndsRAMoffset), &instruction, 4, 0);
-
+			DisableRunWithoutY();
 			b = false;
 		}
 		WriteProcessMemory(EmuHandle, (void*)(0x09f4ac + ndsRAMoffset), &b, 1, 0);
@@ -196,11 +203,11 @@ void UpdateJoystickInput()
 
 	if (state.Gamepad.sThumbRX > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
 	{
-		myInput.buttonsHeld = Input::CAM_LEFT;
+		myInput.buttonsHeld = (camera_checkbox.flags & Button::checked) ? Input::CAM_LEFT : Input::CAM_RIGHT;
 	}
 	else if (state.Gamepad.sThumbRX < -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
 	{
-		myInput.buttonsHeld = Input::CAM_RIGHT;
+		myInput.buttonsHeld = (camera_checkbox.flags & Button::checked) ? Input::CAM_RIGHT : Input::CAM_LEFT;
 	}
 
 	WriteProcessMemory(EmuHandle, (Input*)input1, &myInput, sizeof(Input), 0);
@@ -311,4 +318,17 @@ unsigned GetPlayer0()
 	unsigned player0;
 	ReadProcessMemory(EmuHandle, (void*)(PLAYER_ARR), &player0, 4, 0);
 	return player0;
+}
+
+void CloseEmu()
+{
+	if (!EmuHandle) return;
+
+	DisableJoystickInput();
+	DisableRunWithoutY();
+	bool b = false;
+	WriteProcessMemory(EmuHandle, (void*)(0x09f4ac + ndsRAMoffset), &b, 1, 0);
+	
+	CloseHandle(EmuHandle);
+	EmuHandle = NULL;
 }

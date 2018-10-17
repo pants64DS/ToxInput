@@ -16,9 +16,6 @@ constexpr int outline = 5;
 constexpr int raw_border = 8;
 constexpr int border = raw_border + outline;
 
-constexpr int screen_width = 620;
-constexpr int screen_height = 310;
-
 struct Button
 {
 	sf::RectangleShape rect;

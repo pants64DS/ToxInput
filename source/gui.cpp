@@ -1,5 +1,6 @@
 #include "gui.h"
 #include "emu.h"
+#include "checkbox.h"
 
 sf::Font main_font;
 

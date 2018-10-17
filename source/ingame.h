@@ -42,6 +42,7 @@ struct Input
 HANDLE GetProcessHandle(HWND wnd);
 
 void UpdateRunWithoutY();
+void DisableRunWithoutY();
 
 void EnableJoystickInput();
 void DisableJoystickInput();
@@ -57,6 +58,8 @@ unsigned GetFrameCounter();
 bool IsJITModeCertainlyOn();
 
 unsigned GetPlayer0();
+
+void CloseEmu();
 
 extern HANDLE EmuHandle;
 

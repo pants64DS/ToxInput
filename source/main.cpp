@@ -66,14 +66,18 @@ int main()
 			else
 			{
 				input_checkbox.flags &= ~Button::dead;
-				y_checkbox.flags &= ~Button::dead;
+
+				if (input_checkbox.flags & Button::checked)
+					y_checkbox.flags &= ~Button::dead;
 			}
 
 			rumble_checkbox.flags &= ~Button::dead;
+			camera_checkbox.flags &= ~Button::dead;
 		}
 		else
 		{
 			rumble_checkbox.flags |= Button::dead;
+			camera_checkbox.flags |= Button::dead;
 			input_checkbox.flags |= Button::dead;
 			y_checkbox.flags |= Button::dead;
 
@@ -95,16 +99,12 @@ int main()
 			prevFrameCounter = 0xffffffff;
 		}
 
-		// text (100, 200, GetFrameCounter());
-		// text (100, 220, prevFrameCounter);
-		// text (100, 240, jit_on);
-
 		oldPlayer0 = player0;
 
 		window.display();
 	}
 
-	if (EmuHandle) CloseHandle(EmuHandle);
+	CloseEmu();
 
 	return 0;
 }
