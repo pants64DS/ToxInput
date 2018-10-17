@@ -3,6 +3,7 @@
 
 #include "gui.h"
 #include "controller.h"
+#include "checkbox.h"
 #include <windows.h>
 #include <vector>
 #include <string>

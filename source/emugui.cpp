@@ -38,11 +38,7 @@ void Emu::Update()
 
 	if (flags & click_1_frame)
 	{
-		if (EmuHandle)
-		{
-			CloseHandle(EmuHandle);
-			EmuHandle = NULL;
-		}
+		CloseEmu();
 		
 		selectedEmu = (selectedEmu == id) ? -1 : (EmuHandle = GetProcessHandle(wnd), id);
 	}
