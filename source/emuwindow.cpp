@@ -125,15 +125,18 @@ void Emu::update()
 
 	if (scroll == scrollTarget) scrollSpeed = 0;
 
-	window.draw(bg_rect);
+	if (gfxChangeTimer > 0) window.draw(bg_rect);
 
 	for (int i = 0; i < Emus.size(); i++)
 	{
 		Emus[i].Update();
 	}
 
-	window.draw(outline_rect);
-	window.draw(scroll_cover_rect1);
-	window.draw(scroll_cover_rect2);
-	window.draw(scroll_cover_rect3);
+	if (gfxChangeTimer > 0)
+	{
+		window.draw(outline_rect);
+		window.draw(scroll_cover_rect1);
+		window.draw(scroll_cover_rect2);
+		window.draw(scroll_cover_rect3);
+	}
 }

@@ -7,6 +7,8 @@ sf::Font main_font;
 int mouse_x, mouse_y;
 bool mouseOnWindow;
 
+unsigned char gfxChangeTimer = 30;
+
 sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.7", sf::Style::Titlebar | sf::Style::Close);
 
 bool MouseOnRect(sf::RectangleShape rect)
@@ -49,6 +51,7 @@ void Button::Update()
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			state = (state == ST_MOUSE_OFF || state == ST_INVALID) ? ST_INVALID : ST_CLICKED;
+			gfxChangeTimer = 30;
 		}
 		else
 		{
@@ -64,7 +67,7 @@ void Button::Update()
 		state = ST_MOUSE_OFF;
 	}
 
-	window.draw(rect);
+	if (gfxChangeTimer > 0) window.draw(rect);
 }
 
 void UpdateEvents()
@@ -84,6 +87,8 @@ void UpdateEvents()
 					Emu::scrollSpeed = event.mouseWheel.delta * 10;
 					Emu::scrollTarget = event.mouseWheel.delta * 30 + Emu::scroll;
 				}
+				gfxChangeTimer = 30;
+
 				break;
 			
 			case sf::Event::MouseEntered:
@@ -98,6 +103,7 @@ void UpdateEvents()
 				sf::Vector2i vec = sf::Mouse::getPosition(window);
 				mouse_x = vec.x;
 				mouse_y = vec.y;
+				gfxChangeTimer = 30;
 				break;
 		}
 	}

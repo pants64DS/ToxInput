@@ -9,6 +9,8 @@ extern sf::Font main_font;
 extern int mouse_x, mouse_y;
 extern bool mouseOnWindow;
 
+extern unsigned char gfxChangeTimer;
+
 bool MouseOnRect(sf::RectangleShape rect);
 void UpdateEvents();
 
