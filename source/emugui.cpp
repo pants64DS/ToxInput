@@ -34,7 +34,7 @@ void Emu::Update()
 	rect.setPosition(border, y);
 	name.setPosition(border + 10, y + 7);
 
-	window.draw(name);
+	if (gfxChangeTimer > 0) window.draw(name);
 
 	if (flags & click_1_frame)
 	{

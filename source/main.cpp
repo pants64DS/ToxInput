@@ -7,7 +7,6 @@ void init()
 {
 	window.clear(color::bg3);
 	window.display();
-	window.setFramerateLimit(60);
 
 	sf::Image icon;
 	icon.loadFromFile("icon.png");
@@ -38,11 +37,11 @@ int main()
 {
 	init();
 
+	sf::Clock updateTimer;
+
 	while (window.isOpen())
 	{
 		UpdateEvents();
-
-		window.clear(color::bg3);
 
 		Emu::update();
 		Controller::update();
@@ -101,7 +100,16 @@ int main()
 
 		oldPlayer0 = player0;
 
-		window.display();
+		if (gfxChangeTimer > 0)
+		{
+			window.display();
+			window.clear(color::bg3);
+
+			gfxChangeTimer--;
+		}
+
+		sf::sleep(sf::seconds(1./30.) - updateTimer.getElapsedTime());
+		updateTimer.restart();
 	}
 
 	CloseEmu();

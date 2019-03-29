@@ -27,7 +27,7 @@ void Controller::init()
 
 void Controller::update()
 {
-	window.draw(bg_rect);
+	if (gfxChangeTimer > 0) window.draw(bg_rect);
 
 	if (timer < 13 && timer % 4 == 0)
 		checkIfConnected(timer >> 2);

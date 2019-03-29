@@ -87,7 +87,7 @@ void assign_bit (unsigned char* number, unsigned source_bit, unsigned target_bit
 
 void CheckBox::update()
 {
-	window.draw(bg_rect1);
+	if (gfxChangeTimer > 0) window.draw(bg_rect1);
 
 	input_checkbox.Update();
 	rumble_checkbox.Update();
@@ -135,13 +135,16 @@ void CheckBox::Update()
 	if (flags & click_1_frame) flags ^= checked;
 
 	Button::Update();
-	window.draw(box);
-	window.draw(text);
-
-	if (flags & checked)
+	if (gfxChangeTimer > 0)
 	{
-		sprite.setPosition(box.getPosition());
-		window.draw(sprite);
+		window.draw(box);
+		window.draw(text);
+
+		if (flags & checked)
+		{
+			sprite.setPosition(box.getPosition());
+			window.draw(sprite);
+		}
 	}
 }
 

@@ -22,7 +22,7 @@ void Controller::Update()
 {
 	Button::Update();
 	sprite.setPosition(rect.getPosition() + sf::Vector2f(width/2, height/2));
-	window.draw(sprite);
+	if (gfxChangeTimer > 0) window.draw(sprite);
 
 	if (flags & click_1_frame)
 		selectedController = (selectedController == id) ? -1 : id;
