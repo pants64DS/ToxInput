@@ -1,7 +1,7 @@
--- ToxInput 0.7 (beta) by StarPants --
+-- ToxInput 0.7 (beta) by pants64 --
 
 This program makes it possible to play SM64DS with "360 degree" joystick controls.
-Only compatible with European ROMs and the latest 64 bit X432R version of DeSmuME (0.9.12).
+This branch is only compatible with European ROMs and a specific version of DeSmuME downloaded from https://ci.appveyor.com/project/zeromus/desmume/build/artifacts.
 It works with hacked ROMs too, unless they have changed code in certain places.
 
 How to use:
