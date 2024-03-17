@@ -50,7 +50,8 @@ void Controller::UpdateRumble()
 	{
 		case ST_CANNON:
 		case ST_PUNCH_KICK:
-
+		{
+			auto input0 = ndsRAMoffset + 0x09f49c;
 			unsigned short buttonsPressed;
 			ReadProcessMemory(EmuHandle, (Input*)(input0 + 2), &buttonsPressed, 2, 0);
 
@@ -63,7 +64,7 @@ void Controller::UpdateRumble()
 			}
 
 			break;
-
+		}
 		case ST_CRAZED_CRATE:
 
 			ReadProcessMemory(EmuHandle, (void*)(player0 + (ndsRAMoffset - 0x02000000 + 0x6e1)), &currJumpNumber, 1, 0);
@@ -93,7 +94,7 @@ void Controller::UpdateRumble()
 			break;
 
 		case ST_STUCK_IN_GROUND:
-
+		{
 			static unsigned prev_frame_counter = 0xffffffff;
 
 			unsigned frame_counter;
@@ -129,7 +130,7 @@ void Controller::UpdateRumble()
 			}
 
 			break;
-			
+		}
 		default:
 
 			rumbled = false;

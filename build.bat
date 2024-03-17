@@ -3,24 +3,23 @@
 echo Compiling...
 echo.
 
-cd C:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin
+set mingw64=C:\winlibs-x86_64-posix-seh-gcc-10.1.0-llvm-10.0.0-mingw-w64-7.0.0-r3\mingw64\bin
 
-windres %1/../rc.rc -O coff -o %1/../res.res
+%mingw64%\windres rc.rc -O coff -o res.res
 
-x86_64-w64-mingw32-g++.exe -o %1/../bin/ToxInput.exe %1/../res.res %1/*.cpp -lXInput9_1_0 ^
-%1/../bin/sfml-graphics-2.dll ^
-%1/../bin/sfml-window-2.dll ^
-%1/../bin/sfml-system-2.dll ^
+%mingw64%\g++ -o bin/ToxInput.exe res.res source/*.cpp --std=c++20 -O3 -lXInput9_1_0 ^
+bin/sfml-graphics-2.dll ^
+bin/sfml-window-2.dll ^
+bin/sfml-system-2.dll ^
 -Wl,-subsystem,windows
 
 if %errorlevel% == 0 (
 	echo Program started!
-	cd %1/../bin
+	cd bin
 	call ToxInput.exe
+	cd ..
 ) else (
 	pause
 )
-
-exit
 
 rem this will do until i write a proper makefile

@@ -2,14 +2,9 @@
 #define IN_GAME_INCLUDED
 
 #include <windows.h>
+#include <cstdint>
 
-#define ndsRAMoffset 0x1462C3840 // offset to 0x02000000 in nds address space
-
-constexpr unsigned long long input0 = ndsRAMoffset + 0x09f49c;
-constexpr unsigned long long input1 = ndsRAMoffset + 0x09f4b4;
-
-constexpr unsigned long long KuppaPointer_addr = ndsRAMoffset + 0x09fc48;
-constexpr unsigned long long PLAYER_ARR = ndsRAMoffset + 0x09f394;
+extern uint64_t ndsRAMoffset; // offset to 0x02000000 in nds address space
 
 struct Input
 {

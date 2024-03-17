@@ -4,6 +4,8 @@
 #include "emu.h"
 #include <math.h>
 
+constinit uint64_t ndsRAMoffset = 0x1462C3840; // offset to 0x02000000 in nds address space
+
 #define pi 3.1415926535897932384626433832795
 
 HANDLE EmuHandle = NULL;
@@ -210,6 +212,8 @@ void UpdateJoystickInput()
 		myInput.buttonsHeld = (camera_checkbox.flags & Button::checked) ? Input::CAM_RIGHT : Input::CAM_LEFT;
 	}
 
+	auto input1 = ndsRAMoffset + 0x09f4b4;
+
 	WriteProcessMemory(EmuHandle, (Input*)input1, &myInput, sizeof(Input), 0);
 }
 
@@ -255,6 +259,8 @@ bool IsCutsceneRunning()
 	if (EmuHandle == NULL) return false;
 
 	unsigned KuppaPointer;
+	auto KuppaPointer_addr = ndsRAMoffset + 0x09fc48;
+
 	ReadProcessMemory(EmuHandle, (unsigned*)(KuppaPointer_addr), &KuppaPointer, 4, 0);
 
 	return KuppaPointer != 0;
@@ -316,6 +322,8 @@ bool IsJITModeCertainlyOn()
 unsigned GetPlayer0()
 {
 	unsigned player0;
+	auto PLAYER_ARR = ndsRAMoffset + 0x09f394;
+
 	ReadProcessMemory(EmuHandle, (void*)(PLAYER_ARR), &player0, 4, 0);
 	return player0;
 }
