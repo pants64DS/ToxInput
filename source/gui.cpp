@@ -9,7 +9,7 @@ bool mouseOnWindow;
 
 unsigned char gfxChangeTimer = 30;
 
-sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 0.7", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "ToxInput 1.0", sf::Style::Titlebar | sf::Style::Close);
 
 bool MouseOnRect(sf::RectangleShape rect)
 {
