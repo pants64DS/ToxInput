@@ -2,6 +2,8 @@
 #include "controller.h"
 #include "checkbox.h"
 #include "ingame.h"
+#include <cstring>
+#include <string>
 
 void init()
 {
@@ -33,8 +35,35 @@ inline void text(float x, float y, long long int num)
 	window.draw(text);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+	for (std::size_t i = 0; i < argc; ++i)
+	{
+		static constexpr char addressFlag[] = "--address=0x";
+		static constexpr auto addressFlagLength = sizeof(addressFlag) - 1; // -1 for the null character
+
+		if (std::strncmp(argv[i], addressFlag, addressFlagLength) == 0)
+		{
+			try
+			{
+				ndsRAMoffset = std::stoull(argv[i] + addressFlagLength, nullptr, 16);
+
+				continue;
+			}
+			catch(const std::logic_error&) {}
+		}
+
+		if (argv[i][0] == '-')
+		{
+			std::string msg = "Invalid command line option: ";
+			msg += argv[i];
+
+			MessageBox(NULL, msg.c_str(), "Error", MB_ICONERROR | MB_OK);
+
+			return 1;
+		}
+	}
+
 	init();
 
 	sf::Clock updateTimer;
